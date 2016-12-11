@@ -3,7 +3,7 @@ package fr.unice.polytech.iam;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Contact {
+public class Contact implements Comparable {
 
     private String id;
     private String name;
@@ -64,5 +64,10 @@ public class Contact {
         }
 
         return result.toString();
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        return name.compareTo(((Contact) another).getName());
     }
 }
