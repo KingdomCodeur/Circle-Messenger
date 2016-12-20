@@ -1,11 +1,14 @@
 package fr.unice.polytech.iam;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +18,11 @@ import java.util.Map;
 public class ContactFetcher {
 
     private final Context context;
+    private ContentResolver contentResolver;
 
-    public ContactFetcher(Context c) {
+    public ContactFetcher(Context c,ContentResolver cr) {
         this.context = c;
+        this.contentResolver = cr;
     }
 
     public List<Contact> fetchAll() {
@@ -53,6 +58,7 @@ public class ContactFetcher {
         c.close();
 
         matchContactNumbers(contactsMap);
+        matchContactSms(contactsMap);
         matchContactEmails(contactsMap);
 
         return listContacts;
@@ -142,6 +148,33 @@ public class ContactFetcher {
         }
 
         email.close();
+    }
+
+    private void matchContactSms(Map<String, Contact> contactsMap) {
+        for(Map.Entry<String, Contact> entry : contactsMap.entrySet()){
+            entry.getValue().addSms(getAllSms(entry.getValue().getNumbers()));
+        }
+    }
+
+    private List<String> getAllSms(List<ContactPhone> cp){
+        List<String> numbers = new ArrayList<>();
+        for(ContactPhone c : cp){
+            numbers.add(c.getNumber());
+        }
+        Uri uriSMSURI = Uri.parse("content://sms/inbox");
+        Cursor cur = contentResolver.query(uriSMSURI, null, null, null, null);
+
+        List<String> sms = new ArrayList<>();
+        while(cur.moveToNext()) {
+            String address = cur.getString(cur.getColumnIndex("address"));
+            if(numbers.contains(address)) {
+                String body = cur.getString(cur.getColumnIndexOrThrow("body"));
+                Log.w("DEBUGSMS : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
+                sms.add("Number: " + address + " .Message : " + body);
+            }
+        }
+
+        return sms;
     }
 
 }

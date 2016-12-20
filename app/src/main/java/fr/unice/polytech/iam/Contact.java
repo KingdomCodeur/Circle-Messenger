@@ -9,12 +9,14 @@ public class Contact implements Comparable {
     private String name;
     private List<ContactEmail> emails;
     private List<ContactPhone> numbers;
+    private List<String> sms;
 
     public Contact(String contactId, String contactName) {
         this.id = contactId;
         this.name = contactName;
         this.emails = new ArrayList<>();
         this.numbers = new ArrayList<>();
+        this.sms = new ArrayList<>();
     }
 
     public void addEmail(String address, String type) {
@@ -23,6 +25,10 @@ public class Contact implements Comparable {
 
     public void addNumber(String number, String type) {
         numbers.add(new ContactPhone(number, type));
+    }
+
+    public void addSms(List<String> s){
+        this.sms = s;
     }
 
     public String getId() {

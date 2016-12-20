@@ -9,10 +9,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Accueil extends AppCompatActivity {
@@ -29,7 +32,8 @@ public class Accueil extends AppCompatActivity {
 
         checkPermissions();
 
-        listContacts = new ContactFetcher(this).fetchAll();
+        listContacts = new ContactFetcher(this,getContentResolver()).fetchAll();
+        Collections.sort(listContacts);
         lvContacts = (ListView) findViewById(R.id.listContact);
         ContactsAdapter adapterContacts = new ContactsAdapter(this, listContacts);
         lvContacts.setAdapter(adapterContacts);
@@ -50,20 +54,6 @@ public class Accueil extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    public List<String> getAllSms(){
-        Uri uriSMSURI = Uri.parse("content://sms/inbox");
-        Cursor cur = getContentResolver().query(uriSMSURI, null, null, null, null);
-
-        while(cur.moveToNext()) {
-            String address = cur.getString(cur.getColumnIndex("address"));
-            String body = cur.getString(cur.getColumnIndexOrThrow("body"));
-            Log.w("DEBUGSMS : ","Number: "+ address + " .Message : " + body); // on affiche tous les sms dans le debug
-            sms.add("Number: "+ address + " .Message : " + body);
-        }
-
-        return sms;
     }
 
 
