@@ -174,6 +174,8 @@ public class ContactFetcher {
             }
         }
 
+        cur.close();
+
         return sms;
     }
 

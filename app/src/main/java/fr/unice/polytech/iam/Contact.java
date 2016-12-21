@@ -47,6 +47,8 @@ public class Contact implements Comparable {
         return numbers;
     }
 
+    public List<String> getSMS(){return sms;}
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

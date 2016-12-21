@@ -35,5 +35,21 @@
         android:layout_alignParentRight="true"
         android:text="bob@fake.com"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    <ListView
+        android:id="@+id/tvSMS"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignBaseline="@+id/tvPhone"
+        android:visibility="gone"
+        ></ListView>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/triforce"
+        android:id="@+id/triforce"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/tvEmail" />
 
 </RelativeLayout>
