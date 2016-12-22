@@ -159,7 +159,17 @@ public class ContactFetcher {
     private List<String> getAllSms(List<ContactPhone> cp){
         List<String> numbers = new ArrayList<>();
         for(ContactPhone c : cp){
-            numbers.add(c.getNumber());
+            String traitementPhone = c.getNumber();
+
+            traitementPhone.replace(" ",""); //pour traiter le cas de : +33 6 19 62 08 41
+            traitementPhone.replace("-",""); // pour traiter le cas de : 063-099-1237
+
+            if(traitementPhone.charAt(0) == '0'){ // pour remplacer le premier 0 par +33
+                traitementPhone = traitementPhone.substring(1);
+                traitementPhone = "+33"+traitementPhone;
+            }
+
+            numbers.add(traitementPhone);
         }
         Uri uriSMSURI = Uri.parse("content://sms/inbox");
         Cursor cur = contentResolver.query(uriSMSURI, null, null, null, null);
@@ -167,10 +177,13 @@ public class ContactFetcher {
         List<String> sms = new ArrayList<>();
         while(cur.moveToNext()) {
             String address = cur.getString(cur.getColumnIndex("address"));
+            Log.w("DEBUGTEL : ", numbers.toString());
             if(numbers.contains(address)) {
                 String body = cur.getString(cur.getColumnIndexOrThrow("body"));
                 Log.w("DEBUGSMS : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
-                sms.add("Number: " + address + " .Message : " + body);
+                Log.w("DEBUGTEL : ", address);
+                //sms.add("Number: " + address + " .Message : " + body);
+                sms.add(body);
             }
         }
 

@@ -1,6 +1,7 @@
 package fr.unice.polytech.iam;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,15 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
                 t.show();
                 RelativeLayout tmp =(RelativeLayout)view.getParent();
                 ListView tmpSMS = (ListView) tmp.findViewById(R.id.tvSMS);
-                tmpSMS.setVisibility(View.VISIBLE);
+                if(tmpSMS.getVisibility() == View.VISIBLE){
+                    tmpSMS.setVisibility(View.GONE);
+                }
+                else {
+                    tmpSMS.setVisibility(View.VISIBLE);
+                }
+
+                //tmpSMS.setMinimumHeight(100*tmpSMS.getChildCount());
+                //Log.w("Nombre d'enfants : ",""+tmpSMS.getChildCount());
             }
         });
 
