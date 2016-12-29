@@ -1,4 +1,4 @@
-package fr.unice.polytech.iam;
+package fr.unice.polytech.iam.contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ public class Contact implements Comparable {
     private List<ContactEmail> emails;
     private List<ContactPhone> numbers;
     private List<String> sms;
+    private List<PhoneCall> calls;
 
     public Contact(String contactId, String contactName) {
         this.id = contactId;
@@ -17,6 +18,7 @@ public class Contact implements Comparable {
         this.emails = new ArrayList<>();
         this.numbers = new ArrayList<>();
         this.sms = new ArrayList<>();
+        this.calls = new ArrayList<>();
     }
 
     public void addEmail(String address, String type) {
@@ -29,6 +31,10 @@ public class Contact implements Comparable {
 
     public void addSms(List<String> s){
         this.sms = s;
+    }
+
+    public void addPhoneCall(PhoneCall call) {
+        calls.add(call);
     }
 
     public String getId() {
@@ -48,6 +54,10 @@ public class Contact implements Comparable {
     }
 
     public List<String> getSMS(){return sms;}
+
+    public List<PhoneCall> getPhoneCalls() {
+        return calls;
+    }
 
     @Override
     public String toString() {

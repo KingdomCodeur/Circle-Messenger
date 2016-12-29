@@ -40,8 +40,7 @@
         android:layout_width="fill_parent"
         android:layout_height="1000dp"
         android:layout_alignBaseline="@+id/tvPhone"
-        android:visibility="gone"
-        ></ListView>
+        android:visibility="gone" />
 
     <ImageView
         android:layout_width="40dp"

@@ -1,7 +1,6 @@
 package fr.unice.polytech.iam;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,9 @@ import android.widget.Toast;
 //import com.example.colombet.R;
 
 import java.util.List;
+
+import fr.unice.polytech.iam.contact.Contact;
+import fr.unice.polytech.iam.contact.PhoneCall;
 
 public class ContactsAdapter extends ArrayAdapter<Contact> {
 
@@ -54,6 +56,21 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
         tvSMS.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,contact.getSMS()));
 
         ImageView tri = (ImageView) view.findViewById(R.id.triforce);
+
+        tri.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                List<PhoneCall> l = contact.getPhoneCalls();
+                if (null != l) {
+                    Toast.makeText(getContext(), contact.getPhoneCalls().size() + " appels", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "null == l", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        /*
         tri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //Permet l'affichage des sms mais bon quelques petits bugs ...
@@ -72,6 +89,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
                 //Log.w("Nombre d'enfants : ",""+tmpSMS.getChildCount());
             }
         });
+        //*/
 
         return view;
     }

@@ -1,4 +1,4 @@
-package fr.unice.polytech.iam;
+package fr.unice.polytech.iam.contact;
 
 public class ContactEmail {
 

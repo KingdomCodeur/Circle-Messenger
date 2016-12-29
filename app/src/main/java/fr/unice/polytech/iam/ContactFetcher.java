@@ -5,15 +5,21 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import fr.unice.polytech.iam.contact.Contact;
+import fr.unice.polytech.iam.contact.ContactPhone;
+import fr.unice.polytech.iam.contact.PhoneCall;
 
 public class ContactFetcher {
 
@@ -60,6 +66,7 @@ public class ContactFetcher {
         matchContactNumbers(contactsMap);
         matchContactSms(contactsMap);
         matchContactEmails(contactsMap);
+        matchContactPhoneCalls(contactsMap);
 
         return listContacts;
     }
@@ -85,12 +92,22 @@ public class ContactFetcher {
             final int contactIdColumnIndex = phone.getColumnIndex(Phone.CONTACT_ID);
 
             while (!phone.isAfterLast()) {
-                final String number = phone.getString(contactNumberColumnIndex);
+                String number = phone.getString(contactNumberColumnIndex);
                 final String contactId = phone.getString(contactIdColumnIndex);
                 Contact contact = contactsMap.get(contactId);
 
                 if (null == contact) {
                     continue;
+                }
+
+                String c = number.concat("");
+
+                c = c.replace(" ", "");
+                c = c.replace("-", "");
+
+                if (c.charAt(0) == '0') {
+                    c = c.substring(1);
+                    c = "+33".concat(c);
                 }
 
                 final int type = phone.getInt(contactTypeColumnIndex);
@@ -99,12 +116,88 @@ public class ContactFetcher {
                         context.getResources(),
                         type,
                         customLabel);
-                contact.addNumber(number, phoneType.toString());
+                contact.addNumber(c, phoneType.toString());
                 phone.moveToNext();
             }
         }
 
         phone.close();
+    }
+
+    private void matchContactPhoneCalls(Map<String, Contact> contactsMap) {
+        // Get phone history
+        final String[] phoneCallProjection = new String[] {
+                CallLog.Calls.NUMBER,
+                CallLog.Calls.TYPE,
+                CallLog.Calls.DATE,
+                CallLog.Calls.DURATION,
+        };
+
+        Cursor call = new CursorLoader(context,
+                CallLog.Calls.CONTENT_URI,
+                phoneCallProjection,
+                null,
+                null,
+                null).loadInBackground();
+
+        if (call.moveToFirst()) {
+            final int callNumberColumnIndex = call.getColumnIndex(CallLog.Calls.NUMBER);
+            final int callTypeColumnIndex = call.getColumnIndex(CallLog.Calls.TYPE);
+            final int callDateColumnIndex = call.getColumnIndex(CallLog.Calls.DATE);
+            final int callDurationColumnIndex = call.getColumnIndex(CallLog.Calls.DURATION);
+
+            while (!call.isAfterLast()) {
+                final String number = call.getString(callNumberColumnIndex);
+                final String type = call.getString(callTypeColumnIndex);
+                final String date = call.getString(callDateColumnIndex);
+                final Date callDate = new Date(Long.valueOf(date));
+                final String callDuration = call.getString(callDurationColumnIndex);
+                final int duration = Integer.parseInt(callDuration);
+
+                Contact contact = null;
+
+                for (Contact aContact : contactsMap.values()) {
+                    for (ContactPhone phone : aContact.getNumbers()) {
+                        if (number.equals(phone.getNumber())) {
+                            contact = aContact;
+                            break;
+                        }
+                        if (null != contact) {
+                            break;
+                        }
+                    }
+                }
+
+                if (null == contact) {
+                    call.moveToNext();
+                    continue;
+                } else {
+                    Log.w("PhoneCall : ", contact.getName());
+                }
+
+                PhoneCall.PhoneCallType phoneCallType = null;
+                switch (Integer.parseInt(type)) {
+                    case CallLog.Calls.OUTGOING_TYPE:
+                        phoneCallType = PhoneCall.PhoneCallType.OUTGOING;
+                        break;
+
+                    case CallLog.Calls.INCOMING_TYPE:
+                        phoneCallType = PhoneCall.PhoneCallType.INCOMING;
+                        break;
+
+                    case CallLog.Calls.MISSED_TYPE:
+                        phoneCallType = PhoneCall.PhoneCallType.MISSED;
+                        break;
+                }
+
+                PhoneCall phoneCall = new PhoneCall(phoneCallType, callDate, duration);
+                contact.addPhoneCall(phoneCall);
+
+                call.moveToNext();
+            }
+        }
+
+        call.close();
     }
 
     private void matchContactEmails(Map<String, Contact> contactsMap) {
@@ -177,11 +270,11 @@ public class ContactFetcher {
         List<String> sms = new ArrayList<>();
         while(cur.moveToNext()) {
             String address = cur.getString(cur.getColumnIndex("address"));
-            Log.w("DEBUGTEL : ", numbers.toString());
+//            Log.w("DEBUGTEL : ", numbers.toString());
             if(numbers.contains(address)) {
                 String body = cur.getString(cur.getColumnIndexOrThrow("body"));
-                Log.w("DEBUGSMS : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
-                Log.w("DEBUGTEL : ", address);
+//                Log.w("DEBUGSMS : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
+//                Log.w("DEBUGTEL : ", address);
                 //sms.add("Number: " + address + " .Message : " + body);
                 sms.add(body);
             }
