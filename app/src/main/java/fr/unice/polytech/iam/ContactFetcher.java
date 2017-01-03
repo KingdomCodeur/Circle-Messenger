@@ -12,6 +12,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -264,25 +265,65 @@ public class ContactFetcher {
 
             numbers.add(traitementPhone);
         }
-        Uri uriSMSURI = Uri.parse("content://sms/inbox");
+        Uri uriSMSURI = Uri.parse("content://sms/");
         Cursor cur = contentResolver.query(uriSMSURI, null, null, null, null);
 
         List<String> sms = new ArrayList<>();
         while(cur.moveToNext()) {
             String address = cur.getString(cur.getColumnIndex("address"));
 //            Log.w("DEBUGTEL : ", numbers.toString());
+            address = convertToPlusFormat(address);
             if(numbers.contains(address)) {
                 String body = cur.getString(cur.getColumnIndexOrThrow("body"));
 //                Log.w("DEBUGSMS : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
 //                Log.w("DEBUGTEL : ", address);
+                String stamp = cur.getString(cur.getColumnIndex("date"));
+                long timestamplong = Long.parseLong(stamp);
+                Date d = new Date(timestamplong);
+                Calendar c = Calendar.getInstance();
+                c.setTime(d);
+                Log.w("affichage date ", c.toString());
+                //Log.w("DEBUG TIMESTAMP", cur.getString(cur.getColumnIndex("date")));
                 //sms.add("Number: " + address + " .Message : " + body);
                 sms.add(body);
             }
         }
 
         cur.close();
+//
+//        uriSMSURI = Uri.parse("content://sms/sent");
+//        cur = contentResolver.query(uriSMSURI, null, null, null, null);
+//
+//        while(cur.moveToNext()) {
+//            String address = cur.getString(cur.getColumnIndex("address"));
+////            Log.w("DEBUGTEL : ", numbers.toString());
+//            /*if(address.contains("783632")){
+//                Log.w("SALMERON",address);
+//            }*/
+//            address = convertToPlusFormat(address);
+//            if(numbers.contains(address)) {
+//                String body = cur.getString(cur.getColumnIndexOrThrow("body"));
+//                //Log.w("DEBUGSMS SENT : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
+//                //Log.w("DEBUGTEL SENT : ", address);
+//                //sms.add("Number: " + address + " .Message : " + body);
+//                sms.add(body);
+//            }
+//        }
+//
+//        cur.close();
 
         return sms;
+    }
+
+    private String convertToPlusFormat(String number){
+        number.replace(" ",""); //pour traiter le cas de : +33 6 19 62 08 41
+        number.replace("-",""); // pour traiter le cas de : 063-099-1237
+
+        if(number.charAt(0) == '0'){ // pour remplacer le premier 0 par +33
+            number = number.substring(1);
+            number = "+33"+number;
+        }
+        return number;
     }
 
 }
