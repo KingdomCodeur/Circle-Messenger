@@ -19,7 +19,7 @@ public class Accueil extends AppCompatActivity {
     private List<Contact> listContacts;
     private ListView lvContacts;
 
-    public List<String> sms = new ArrayList<String>();
+//    public List<String> sms = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class Accueil extends AppCompatActivity {
     }
 
     private void checkPermissions(){
-        List<String> permissions = new ArrayList<String>();
+        List<String> permissions = new ArrayList<>();
         permissions.add(Manifest.permission.READ_CONTACTS);
         permissions.add(Manifest.permission.READ_SMS);
         permissions.add(Manifest.permission.READ_CALL_LOG);

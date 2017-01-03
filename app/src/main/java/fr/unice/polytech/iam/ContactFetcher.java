@@ -25,7 +25,7 @@ import fr.unice.polytech.iam.contact.PhoneCall;
 public class ContactFetcher {
 
     private final Context context;
-    private ContentResolver contentResolver;
+    private final ContentResolver contentResolver;
 
     public ContactFetcher(Context c,ContentResolver cr) {
         this.context = c;
@@ -37,6 +37,7 @@ public class ContactFetcher {
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME,
         };
+
         List<Contact> listContacts = new ArrayList<>();
         CursorLoader cursorLoader = new CursorLoader(context,
                 ContactsContract.Contacts.CONTENT_URI,
@@ -66,8 +67,10 @@ public class ContactFetcher {
 
         matchContactNumbers(contactsMap);
         matchContactSms(contactsMap);
-        matchContactEmails(contactsMap);
+//        matchContactEmails(contactsMap);
         matchContactPhoneCalls(contactsMap);
+
+        listContacts = cleanEmptyContacts(listContacts);
 
         return listContacts;
     }
@@ -101,15 +104,7 @@ public class ContactFetcher {
                     continue;
                 }
 
-                String c = number.concat("");
-
-                c = c.replace(" ", "");
-                c = c.replace("-", "");
-
-                if (c.charAt(0) == '0') {
-                    c = c.substring(1);
-                    c = "+33".concat(c);
-                }
+                String c = convertToPlusFormat(number);
 
                 final int type = phone.getInt(contactTypeColumnIndex);
                 String customLabel = "Custom";
@@ -151,7 +146,8 @@ public class ContactFetcher {
                 final String number = call.getString(callNumberColumnIndex);
                 final String type = call.getString(callTypeColumnIndex);
                 final String date = call.getString(callDateColumnIndex);
-                final Date callDate = new Date(Long.valueOf(date));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(Long.valueOf(date));
                 final String callDuration = call.getString(callDurationColumnIndex);
                 final int duration = Integer.parseInt(callDuration);
 
@@ -191,7 +187,7 @@ public class ContactFetcher {
                         break;
                 }
 
-                PhoneCall phoneCall = new PhoneCall(phoneCallType, callDate, duration);
+                PhoneCall phoneCall = new PhoneCall(phoneCallType, calendar, duration);
                 contact.addPhoneCall(phoneCall);
 
                 call.moveToNext();
@@ -254,14 +250,7 @@ public class ContactFetcher {
         List<String> numbers = new ArrayList<>();
         for(ContactPhone c : cp){
             String traitementPhone = c.getNumber();
-
-            traitementPhone.replace(" ",""); //pour traiter le cas de : +33 6 19 62 08 41
-            traitementPhone.replace("-",""); // pour traiter le cas de : 063-099-1237
-
-            if(traitementPhone.charAt(0) == '0'){ // pour remplacer le premier 0 par +33
-                traitementPhone = traitementPhone.substring(1);
-                traitementPhone = "+33"+traitementPhone;
-            }
+            traitementPhone = convertToPlusFormat(traitementPhone);
 
             numbers.add(traitementPhone);
         }
@@ -269,6 +258,10 @@ public class ContactFetcher {
         Cursor cur = contentResolver.query(uriSMSURI, null, null, null, null);
 
         List<String> sms = new ArrayList<>();
+        if (null == cur) {
+            return sms;
+        }
+
         while(cur.moveToNext()) {
             String address = cur.getString(cur.getColumnIndex("address"));
 //            Log.w("DEBUGTEL : ", numbers.toString());
@@ -290,40 +283,28 @@ public class ContactFetcher {
         }
 
         cur.close();
-//
-//        uriSMSURI = Uri.parse("content://sms/sent");
-//        cur = contentResolver.query(uriSMSURI, null, null, null, null);
-//
-//        while(cur.moveToNext()) {
-//            String address = cur.getString(cur.getColumnIndex("address"));
-////            Log.w("DEBUGTEL : ", numbers.toString());
-//            /*if(address.contains("783632")){
-//                Log.w("SALMERON",address);
-//            }*/
-//            address = convertToPlusFormat(address);
-//            if(numbers.contains(address)) {
-//                String body = cur.getString(cur.getColumnIndexOrThrow("body"));
-//                //Log.w("DEBUGSMS SENT : ", "Number: " + address + " .Message : " + body); // on affiche tous les sms dans le debug
-//                //Log.w("DEBUGTEL SENT : ", address);
-//                //sms.add("Number: " + address + " .Message : " + body);
-//                sms.add(body);
-//            }
-//        }
-//
-//        cur.close();
-
         return sms;
     }
 
     private String convertToPlusFormat(String number){
-        number.replace(" ",""); //pour traiter le cas de : +33 6 19 62 08 41
-        number.replace("-",""); // pour traiter le cas de : 063-099-1237
+        number = number.replace(" ","");         // Pour traiter le cas de : +33 6 19 62 08 41
+        number = number.replace("-","");         // Pour traiter le cas de : 063-099-1237
 
-        if(number.charAt(0) == '0'){ // pour remplacer le premier 0 par +33
+        if(number.charAt(0) == '0'){    // Pour remplacer le premier 0 par +33
             number = number.substring(1);
-            number = "+33"+number;
+            number = "+33" + number;
         }
         return number;
+    }
+
+    private List<Contact> cleanEmptyContacts(List<Contact> contacts) {
+        List<Contact> copyContacts = new ArrayList<>();
+        for (Contact aContact : contacts) {
+            if (aContact.hasData()) {
+                copyContacts.add(aContact);
+            }
+        }
+        return copyContacts;
     }
 
 }

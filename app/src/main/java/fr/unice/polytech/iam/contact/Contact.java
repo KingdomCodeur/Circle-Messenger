@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Contact implements Comparable {
 
-    private String id;
-    private String name;
+    private final String id;
+    private final String name;
     private List<ContactEmail> emails;
     private List<ContactPhone> numbers;
     private List<String> sms;
@@ -30,7 +30,7 @@ public class Contact implements Comparable {
     }
 
     public void addSms(List<String> s){
-        this.sms = s;
+        sms = s;
     }
 
     public void addPhoneCall(PhoneCall call) {
@@ -57,6 +57,14 @@ public class Contact implements Comparable {
 
     public List<PhoneCall> getPhoneCalls() {
         return calls;
+    }
+
+    public boolean hasANumber() {
+        return numbers.size() > 0;
+    }
+
+    public boolean hasData() {
+        return hasANumber() && sms.size() > 0 || calls.size() > 0;
     }
 
     @Override
@@ -86,6 +94,9 @@ public class Contact implements Comparable {
 
     @Override
     public int compareTo(Object another) {
+        if (null == another) {
+            return 1;
+        }
         return name.compareTo(((Contact) another).getName());
     }
 }

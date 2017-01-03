@@ -7,11 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-//import com.example.colombet.R;
 
 import java.util.List;
 
@@ -32,6 +29,10 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
         // Check if an existing view is being reused, otherwise inflate the view
         View view = convertView;
 
+        if (null == parent) {
+            return view;
+        }
+
         if (null == view) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(R.layout.adapter_contact_item, parent, false);
@@ -41,7 +42,13 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
         TextView tvPhone = (TextView) view.findViewById(R.id.tvPhone);
+
+        if (null == contact) {
+            return view;
+        }
+
         final ListView tvSMS = (ListView) view.findViewById(R.id.tvSMS);
+
         tvName.setText(contact.getName());
         tvEmail.setText("");
         tvPhone.setText("");
@@ -53,7 +60,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
             tvPhone.setText(contact.getNumbers().get(0).getNumber());
         }
 
-        tvSMS.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,contact.getSMS()));
+        tvSMS.setAdapter(new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,contact.getSMS()));
 
         ImageView tri = (ImageView) view.findViewById(R.id.triforce);
 
@@ -63,7 +70,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
             public void onClick(View v) {
                 List<PhoneCall> l = contact.getPhoneCalls();
                 if (null != l) {
-                    Toast.makeText(getContext(), contact.getPhoneCalls().size() + " appels", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), contact.getPhoneCalls().size() + " appels et " + contact.getSMS().size() + " sms.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "null == l", Toast.LENGTH_SHORT).show();
                 }
