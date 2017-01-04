@@ -9,7 +9,7 @@ public class Contact implements Comparable {
     private final String name;
     private List<ContactEmail> emails;
     private List<ContactPhone> numbers;
-    private List<String> sms;
+    private List<Sms> sms;
     private List<PhoneCall> calls;
 
     public Contact(String contactId, String contactName) {
@@ -29,7 +29,7 @@ public class Contact implements Comparable {
         numbers.add(new ContactPhone(number, type));
     }
 
-    public void addSms(List<String> s){
+    public void addSms(List<Sms> s){
         sms = s;
     }
 
@@ -53,7 +53,7 @@ public class Contact implements Comparable {
         return numbers;
     }
 
-    public List<String> getSMS(){return sms;}
+    public List<Sms> getSMS(){return sms;}
 
     public List<PhoneCall> getPhoneCalls() {
         return calls;

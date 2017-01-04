@@ -21,6 +21,7 @@ import java.util.Map;
 import fr.unice.polytech.iam.contact.Contact;
 import fr.unice.polytech.iam.contact.ContactPhone;
 import fr.unice.polytech.iam.contact.PhoneCall;
+import fr.unice.polytech.iam.contact.Sms;
 
 public class ContactFetcher {
 
@@ -246,7 +247,7 @@ public class ContactFetcher {
         }
     }
 
-    private List<String> getAllSms(List<ContactPhone> cp){
+    private List<Sms> getAllSms(List<ContactPhone> cp){
         List<String> numbers = new ArrayList<>();
         for(ContactPhone c : cp){
             String traitementPhone = c.getNumber();
@@ -257,7 +258,7 @@ public class ContactFetcher {
         Uri uriSMSURI = Uri.parse("content://sms/");
         Cursor cur = contentResolver.query(uriSMSURI, null, null, null, null);
 
-        List<String> sms = new ArrayList<>();
+        List<Sms> sms = new ArrayList<>();
         if (null == cur) {
             return sms;
         }
@@ -275,10 +276,10 @@ public class ContactFetcher {
                 Date d = new Date(timestamplong);
                 Calendar c = Calendar.getInstance();
                 c.setTime(d);
-                Log.w("affichage date ", c.toString());
+                //Log.w("affichage date ", c.toString());
                 //Log.w("DEBUG TIMESTAMP", cur.getString(cur.getColumnIndex("date")));
                 //sms.add("Number: " + address + " .Message : " + body);
-                sms.add(body);
+                sms.add(new Sms(body, c));
             }
         }
 
