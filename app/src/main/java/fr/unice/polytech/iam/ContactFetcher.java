@@ -68,12 +68,41 @@ public class ContactFetcher {
 
         matchContactNumbers(contactsMap);
         matchContactSms(contactsMap);
+        matchContactBirthday(contactsMap);
 //        matchContactEmails(contactsMap);
         matchContactPhoneCalls(contactsMap);
 
         listContacts = cleanEmptyContacts(listContacts);
 
         return listContacts;
+    }
+
+    private void matchContactBirthday(Map<String, Contact> contactsMap){
+        for(Contact aContact : contactsMap.values()){
+            // Get Birthday
+            String columns[] = {
+                    ContactsContract.CommonDataKinds.Event.START_DATE,
+                    ContactsContract.CommonDataKinds.Event.TYPE,
+                    ContactsContract.CommonDataKinds.Event.MIMETYPE,
+            };
+
+            String where = ContactsContract.CommonDataKinds.Event.TYPE + "=" + ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY +
+                    " and " + ContactsContract.CommonDataKinds.Event.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE + "' and " + ContactsContract.Data.CONTACT_ID + " = " + aContact.getId();
+
+            Cursor birthdayCur = contentResolver.query(ContactsContract.Data.CONTENT_URI, columns, where, null, null);
+
+            if (birthdayCur.getCount() > 0) {
+                while (birthdayCur.moveToNext()) {
+                    String birthday = birthdayCur.getString(birthdayCur.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+                    Calendar c = Calendar.getInstance();
+                    String[] birth = birthday.split("-");
+                    c.set(Integer.parseInt(birth[0]),Integer.parseInt(birth[1])-1,Integer.parseInt(birth[2]));
+                    contactsMap.get(aContact.getId()).setBirthday(c);
+                    //Log.w("Birthday : ", birthday);
+                }
+            }
+            birthdayCur.close();
+        }
     }
 
     private void matchContactNumbers(Map<String, Contact> contactsMap) {

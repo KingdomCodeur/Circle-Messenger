@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import fr.unice.polytech.iam.contact.Contact;
@@ -70,7 +71,13 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
             public void onClick(View v) {
                 List<PhoneCall> l = contact.getPhoneCalls();
                 if (null != l) {
-                    Toast.makeText(getContext(), contact.getPhoneCalls().size() + " appels et " + contact.getSMS().size() + " sms.", Toast.LENGTH_SHORT).show();
+                    if(contact.getBirthday() != null){
+                        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                        Toast.makeText(getContext(), contact.getPhoneCalls().size() + " appels et " + contact.getSMS().size() + " sms. birthday : "+format1.format(contact.getBirthday().getTime()), Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getContext(), contact.getPhoneCalls().size() + " appels et " + contact.getSMS().size() + " sms.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(getContext(), "null == l", Toast.LENGTH_SHORT).show();
                 }

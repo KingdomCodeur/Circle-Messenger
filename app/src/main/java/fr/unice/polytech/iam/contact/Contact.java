@@ -1,6 +1,7 @@
 package fr.unice.polytech.iam.contact;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Contact implements Comparable {
@@ -11,6 +12,7 @@ public class Contact implements Comparable {
     private List<ContactPhone> numbers;
     private List<Sms> sms;
     private List<PhoneCall> calls;
+    private Calendar birthday;
 
     public Contact(String contactId, String contactName) {
         this.id = contactId;
@@ -58,6 +60,10 @@ public class Contact implements Comparable {
     public List<PhoneCall> getPhoneCalls() {
         return calls;
     }
+
+    public Calendar getBirthday() { return birthday; }
+
+    public void setBirthday(Calendar birthday) { this.birthday = birthday; }
 
     public boolean hasANumber() {
         return numbers.size() > 0;
