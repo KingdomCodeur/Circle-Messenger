@@ -2,7 +2,7 @@ package fr.unice.polytech.iam.contact;
 
 import java.util.Calendar;
 
-public class Sms {
+public class Sms implements Communication {
     private String body;
     private Calendar date;
 

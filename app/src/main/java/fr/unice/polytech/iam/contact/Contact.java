@@ -16,6 +16,7 @@ public class Contact implements Comparable {
     private List<Sms> sms;
     private List<PhoneCall> calls;
     private Calendar birthday;
+    private ContactType contactType = ContactType.NONE;
 
     public Contact(String contactId, String contactName) {
         this.id = contactId;
@@ -66,7 +67,15 @@ public class Contact implements Comparable {
 
     public Calendar getBirthday() { return birthday; }
 
+    public ContactType getContactType() {
+        return contactType;
+    }
+
     public void setBirthday(Calendar birthday) { this.birthday = birthday; }
+
+    public void setContactType(ContactType type) {
+        this.contactType = type;
+    }
 
     public boolean hasANumber() {
         return numbers.size() > 0;
@@ -74,6 +83,17 @@ public class Contact implements Comparable {
 
     public boolean hasData() {
         return hasANumber() && sms.size() > 0 || calls.size() > 0;
+    }
+
+    public String toJSON() {
+        JSONObject o  = new JSONObject();
+        try {
+            o.put("name",this.name);
+            //o.put("nb sms",this.sms.size());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return o.toString();
     }
 
     @Override
@@ -101,17 +121,6 @@ public class Contact implements Comparable {
         return result.toString();
     }
 
-    public String toJSON(){
-        JSONObject o  = new JSONObject();
-        try {
-            o.put("name",this.name);
-            //o.put("nb sms",this.sms.size());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return o.toString();
-    }
-
     @Override
     public int compareTo(Object another) {
         if (null == another) {
@@ -119,4 +128,9 @@ public class Contact implements Comparable {
         }
         return name.compareTo(((Contact) another).getName());
     }
+
+    public enum ContactType {
+        AMI, COLLEGUE, FAMILLE, NONE
+    }
+
 }

@@ -2,7 +2,7 @@ package fr.unice.polytech.iam.contact;
 
 import java.util.Calendar;
 
-public class PhoneCall {
+public class PhoneCall implements Communication {
 
     private final PhoneCallType type;
     private final Calendar date;
