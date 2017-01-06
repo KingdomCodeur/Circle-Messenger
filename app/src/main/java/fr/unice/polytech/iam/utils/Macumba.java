@@ -81,7 +81,7 @@ public class Macumba {
         }
 
         isWeekDay = isWeekDay(c.get(Calendar.DAY_OF_WEEK));
-        averageCallDuration = nbCalls > 0 ? cumulativeCallDuration / nbCalls : 3;
+        averageCallDuration = nbCalls > 0 ? (float) cumulativeCallDuration / nbCalls : 3;
         timeInDay = whatTimeIsIt(c.get(Calendar.HOUR_OF_DAY));
 
         vector = new MyVector(nbSms, nbCalls, cumulativeCallDuration, averageCallDuration, isWeekDay,
