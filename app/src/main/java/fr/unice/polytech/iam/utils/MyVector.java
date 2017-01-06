@@ -9,15 +9,15 @@ public class MyVector {
     private int nbSms = 0;
     private int nbCalls = 0;
     private int cumulativeCallDuration = 0;
-    private int averageCallDuration = 0;
+    private float averageCallDuration = 0;
     private boolean isWeekDay = false;
     private TimeInDay timeInDay = TimeInDay.OTHER;
     private ContactType contactType = ContactType.NONE;
 
     public MyVector() {}
 
-    public MyVector(int nbSms, int nbCalls, int cumulativeCallDuration, int averageCallDuration,
-                    boolean isWeekDay, TimeInDay timeInDay, Contact.ContactType contactType) {
+    public MyVector(int nbSms, int nbCalls, int cumulativeCallDuration, float averageCallDuration,
+                    boolean isWeekDay, TimeInDay timeInDay, ContactType contactType) {
         this.setNbSms(nbSms);
         this.setNbCalls(nbCalls);
         this.setCumulativeCallDuration(cumulativeCallDuration);
@@ -51,11 +51,11 @@ public class MyVector {
         this.cumulativeCallDuration = cumulativeCallDuration;
     }
 
-    public int getAverageCallDuration() {
+    public float getAverageCallDuration() {
         return averageCallDuration;
     }
 
-    public void setAverageCallDuration(int averageCallDuration) {
+    public void setAverageCallDuration(float averageCallDuration) {
         this.averageCallDuration = averageCallDuration;
     }
 
@@ -84,19 +84,20 @@ public class MyVector {
     }
 
     public String toString() {
+        String separator = ",";
         StringBuilder sb = new StringBuilder();
         sb.append(nbSms);
-        sb.append(" ");
+        sb.append(separator);
         sb.append(nbCalls);
-        sb.append(" ");
+        sb.append(separator);
         sb.append(cumulativeCallDuration);
-        sb.append(" ");
+        sb.append(separator);
         sb.append(averageCallDuration);
-        sb.append(" ");
+        sb.append(separator);
         sb.append(isWeekDay ? 1 : 0);
-        sb.append(" ");
-        sb.append(timeInDay.name());
-        sb.append(" ");
+        sb.append(separator);
+        sb.append(timeInDay.ordinal());
+        sb.append(separator);
         sb.append(contactType.name());
         return sb.toString();
     }

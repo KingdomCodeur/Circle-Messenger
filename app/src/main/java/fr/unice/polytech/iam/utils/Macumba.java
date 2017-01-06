@@ -1,5 +1,7 @@
 package fr.unice.polytech.iam.utils;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -18,6 +20,9 @@ public class Macumba {
         List<Communication> communicationList = new ArrayList<>();
         communicationList.addAll(contact.getSMS());
         communicationList.addAll(contact.getPhoneCalls());
+        List<MyVector> vectors = new ArrayList<>();
+
+
 
         Collections.sort(communicationList, new Comparator<Communication>() {
             @Override
@@ -29,13 +34,15 @@ public class Macumba {
         int start = 0;
         int end = 0;
 
-        List<MyVector> vectors = new ArrayList<>();
+        Log.w("Macumba :", "List size = " + communicationList.size());
 
-        while (end < communicationList.size()) {
+        while (start < communicationList.size()) {
             end = getIndexLastElementSameHour(start, communicationList);
             vectors.add(createVector(contact.getContactType(), communicationList, start, end));
+            start = end + 1;
         }
-
+/*
+*/
         return vectors;
     }
 
@@ -47,7 +54,6 @@ public class Macumba {
         while (i <communications.size() - 1 && isSameHour(com.getDate(), communications.get(i + 1).getDate())) {
             i++;
         }
-
         return i;
     }
 
@@ -58,11 +64,10 @@ public class Macumba {
         int nbSms = 0;
         int nbCalls = 0;
         int cumulativeCallDuration = 0;
-        int averageCallDuration = 0;
+        float averageCallDuration = 0;
         boolean isWeekDay;
         TimeInDay timeInDay;
         Calendar c = communications.get(start).getDate();
-
 
         for (int i = start; i <= end; i++) {
             if (communications.get(i) instanceof Sms) {
@@ -76,7 +81,7 @@ public class Macumba {
         }
 
         isWeekDay = isWeekDay(c.get(Calendar.DAY_OF_WEEK));
-        averageCallDuration = cumulativeCallDuration / nbCalls;
+        averageCallDuration = nbCalls > 0 ? cumulativeCallDuration / nbCalls : 3;
         timeInDay = whatTimeIsIt(c.get(Calendar.HOUR_OF_DAY));
 
         vector = new MyVector(nbSms, nbCalls, cumulativeCallDuration, averageCallDuration, isWeekDay,

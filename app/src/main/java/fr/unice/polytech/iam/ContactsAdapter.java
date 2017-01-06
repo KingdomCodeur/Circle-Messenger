@@ -1,6 +1,7 @@
 package fr.unice.polytech.iam;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import fr.unice.polytech.iam.contact.Contact;
 import fr.unice.polytech.iam.contact.PhoneCall;
+import fr.unice.polytech.iam.utils.Macumba;
+import fr.unice.polytech.iam.utils.MyVector;
 
 public class ContactsAdapter extends ArrayAdapter<Contact> {
 
@@ -66,6 +69,23 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
         ImageView tri = (ImageView) view.findViewById(R.id.triforce);
 
         tri.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("Mamamia : ", contact.getName());
+                List<MyVector> vectors = Macumba.createVectors(contact);
+                Log.w("Mamamia : ", vectors.size() + " vecteurs");
+                StringBuilder sb = new StringBuilder();
+                for (MyVector vector : vectors) {
+                    sb.append(vector.toString());
+                    sb.append("\n");
+                }
+                Log.w("Mamamia : ", sb.toString());
+                Toast.makeText(getContext(), "onClick", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        /*
+        tri.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -84,7 +104,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
             }
         });
 
-        /*
+
         tri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //Permet l'affichage des sms mais bon quelques petits bugs ...
