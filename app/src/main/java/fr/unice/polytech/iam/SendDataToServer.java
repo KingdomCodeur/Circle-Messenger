@@ -22,7 +22,7 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         try {
-            URL url = new URL("http://10.188.6.183/CircleMessenger/recupContact.php?contact="+ URLEncoder.encode(strings[0]));//+strings[0]);
+            URL url = new URL("http://colombet-aoechat.rhcloud.com/recupData.php?data="+ URLEncoder.encode(strings[0]) + "&id=" + URLEncoder.encode(strings[1]));//+strings[0]);
             Log.w("DEBUG URL : ",url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.getInputStream();
