@@ -15,14 +15,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by colombet on 04/01/17.
+ * Created by XMG-Fire on 22/01/2017.
  */
 
-public class SendDataToServer extends AsyncTask<String, Void, String> {
+public class ExportData extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         try {
-            URL url =  new URL("http://colombet-aoechat.rhcloud.com/recupData.php");
+            URL url =  new URL("http://colombet-aoechat.rhcloud.com/preferences/export.php");
             //URL url =  new URL("http://10.188.6.183/CircleMessenger/recupData.php"); //POUR DEBUG EN LOCAL
             Log.w("DEBUG URL : ",url.toString());
 
@@ -36,7 +36,7 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
 
             /*On cree les variables POST*/
             ContentValues values = new ContentValues();
-            values.put("data",strings[0]);
+            values.put("JSON",strings[0]);
             values.put("id",strings[1]);
 
             OutputStream os = connection.getOutputStream();
@@ -56,6 +56,7 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
             Log.w("EROOOOOOOR","EROOOOOOR");
             e.printStackTrace();
         }
+        Log.w("Send", "OK");
         return "";
     }
 

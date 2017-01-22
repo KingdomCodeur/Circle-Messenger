@@ -16,9 +16,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="envoyer"
+            android:text="export"
             android:layout_alignTop="@+id/listContact"
             android:id="@+id/sendToServer"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="import"
+            android:layout_alignTop="@+id/listContact"
+            android:id="@+id/importFromServer"
             />
         <ListView
             android:id="@+id/listContact"

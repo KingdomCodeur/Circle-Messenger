@@ -96,6 +96,19 @@ public class Contact implements Comparable {
         return o.toString();
     }
 
+    public boolean hasNumber(String number) {
+        for (ContactPhone phone : numbers) {
+            if (phone.getNumber().equals(number)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasType() {
+        return contactType != ContactType.NONE;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

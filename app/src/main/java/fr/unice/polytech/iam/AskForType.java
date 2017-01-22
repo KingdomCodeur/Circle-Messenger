@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -15,14 +18,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by colombet on 04/01/17.
+ * Created by XMG-Fire on 22/01/2017.
  */
 
-public class SendDataToServer extends AsyncTask<String, Void, String> {
+public class AskForType extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         try {
-            URL url =  new URL("http://colombet-aoechat.rhcloud.com/recupData.php");
+            URL url =  new URL("http://colombet-aoechat.rhcloud.com/circle_forest.php");
             //URL url =  new URL("http://10.188.6.183/CircleMessenger/recupData.php"); //POUR DEBUG EN LOCAL
             Log.w("DEBUG URL : ",url.toString());
 
@@ -36,8 +39,7 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
 
             /*On cree les variables POST*/
             ContentValues values = new ContentValues();
-            values.put("data",strings[0]);
-            values.put("id",strings[1]);
+            values.put("JSON",strings[0]);
 
             OutputStream os = connection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
@@ -46,8 +48,15 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
             writer.flush();
             writer.close();
             os.close();
-            connection.getInputStream();
-            return "OK";
+            InputStream fis = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            reader.close();
+            return out.toString();
 
         } catch (MalformedURLException e) {
             Log.w("EROOOOOOOR","EROOOOOOR");

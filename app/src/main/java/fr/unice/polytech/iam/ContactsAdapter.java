@@ -14,10 +14,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import fr.unice.polytech.iam.contact.Contact;
 import fr.unice.polytech.iam.contact.PhoneCall;
@@ -77,24 +82,61 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
         tvSMS.setAdapter(new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,contact.getSMS()));
 
         ImageView tri = (ImageView) view.findViewById(R.id.triforce);
+        final ImageView icon = (ImageView) view.findViewById(R.id.iconType);
+        final Spinner deroulante = (Spinner) view.findViewById(R.id.spinner);
 
         tri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.w("Mamamia : ", contact.getName());
+                //Log.w("Mamamia : ", contact.getName());
                 List<MyVector> vectors = Macumba.createVectors(contact);
-                Log.w("Mamamia : ", vectors.size() + " vecteurs");
+                //Log.w("Mamamia : ", vectors.size() + " vecteurs");
                 StringBuilder sb = new StringBuilder();
                 for (MyVector vector : vectors) {
                     sb.append(vector.toString());
                     sb.append("\n");
                 }
-                Log.w("Mamamia : ", sb.toString());
-                Toast.makeText(getContext(), "onClick", Toast.LENGTH_LONG).show();
+                //Log.w("Mamamia : ", sb.toString());
+
+                JSONObject jsonObject = new JSONObject();
+                sb = new StringBuilder();
+                JSONArray jsonArray = new JSONArray();
+
+                for (MyVector vector : vectors) {
+                    jsonArray.put(vector.toJSONArrayWithoutType());
+                }
+
+                try {
+                    jsonObject.put(contact.getNumbers().get(0).getNumber(), jsonArray);
+                    AskForType query = new AskForType();
+                    Log.w("SEND", jsonObject.toString());
+                    String ret = query.execute(jsonObject.toString()).get();
+                    Log.w("RRRRRRRRRR", ret);
+                    jsonArray = new JSONArray(ret);
+                    String type = jsonArray.getJSONObject(0).getString("type");
+                    Toast.makeText(getContext(), contact.getName() + " est un(e) " + type + " !", Toast.LENGTH_LONG).show();
+                    if (Contact.ContactType.AMI.name().toLowerCase().equals(type)) {
+                        contact.setContactType(Contact.ContactType.AMI);
+                        deroulante.setSelection(1);
+                        icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ami));
+                    } else if (Contact.ContactType.FAMILLE.name().toLowerCase().equals(type)) {
+                        contact.setContactType(Contact.ContactType.FAMILLE);
+                        deroulante.setSelection(2);
+                        icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.famille));
+                    } else if (Contact.ContactType.COLLEGUE.name().toLowerCase().equals(type)) {
+                        contact.setContactType(Contact.ContactType.COLLEGUE);
+                        deroulante.setSelection(3);
+                        icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.collegue));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         });
-
-        final Spinner deroulante = (Spinner) view.findViewById(R.id.spinner);
 
         if(!holdSpin.containsKey(position)) {
             List choose = new ArrayList();
@@ -112,7 +154,6 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
             holdSpin.put(position,deroulante);
         }
 
-        final ImageView icon = (ImageView) view.findViewById(R.id.iconType);
         switch(contact.getContactType()) {
             case NONE:
                 deroulante.setSelection(0);

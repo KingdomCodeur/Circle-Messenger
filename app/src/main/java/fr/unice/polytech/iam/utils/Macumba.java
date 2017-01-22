@@ -1,7 +1,17 @@
 package fr.unice.polytech.iam.utils;
 
+import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -113,4 +123,73 @@ public class Macumba {
         }
     }
 
+    public static void writeData(Context context, String filename, String data) {
+        try {
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            fos.write(data.getBytes());
+            fos.close();
+            Log.w("FILE!!!!", "Written: " + data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String readData(Context context, String filename) {
+        String message = "";
+        File file = new File(context.getFilesDir() + "/" + filename);
+        Log.w("FILE!!!!", "Read: file.length: " + file.length());
+
+        byte[] bytes = new byte[(int) file.length()];
+        try {
+            FileInputStream fis = context.openFileInput(filename);
+            fis.read(bytes);
+            fis.close();
+            message = new String(bytes);
+            Log.w("FILE!!!!", "Read: " + message);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
+
+    public static void setContactTypeFromJSONArray(List<Contact> contacts, JSONArray jsonArray) {
+        try {
+            List<JSONObject> jsonObjects = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObjects.add(jsonArray.getJSONObject(i));
+            }
+
+            for (JSONObject jsonObject : jsonObjects) {
+                String num = jsonObject.getString("num");
+                String type = jsonObject.getString("type");
+                for (Contact contact : contacts) {
+                    if (contact.hasNumber(num)) {
+                        if (type.equals(ContactType.AMI.name())) {
+                            contact.setContactType(ContactType.AMI);
+                        } else if (type.equals(ContactType.FAMILLE.name())) {
+                            contact.setContactType(ContactType.FAMILLE);
+                        } else if (type.equals(ContactType.COLLEGUE.name())) {
+                            contact.setContactType(ContactType.COLLEGUE);
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setContactTypeFile(Context context, List<Contact> contacts) {
+        String data = readData(context, "circle messenger");
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            setContactTypeFromJSONArray(contacts, jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

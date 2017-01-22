@@ -1,5 +1,8 @@
 package fr.unice.polytech.iam.utils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import fr.unice.polytech.iam.contact.Contact;
 
 import static fr.unice.polytech.iam.contact.Contact.ContactType;
@@ -86,7 +89,7 @@ public class MyVector {
     public String toString() {
         String separator = ",";
         StringBuilder sb = new StringBuilder();
-        sb.append(nbSms);
+ /*       sb.append(nbSms);
         sb.append(separator);
         sb.append(nbCalls);
         sb.append(separator);
@@ -98,7 +101,42 @@ public class MyVector {
         sb.append(separator);
         sb.append(timeInDay.ordinal());
         sb.append(separator);
+        sb.append(contactType.name());*/
+        sb.append(toStringWithoutType());
+        sb.append(separator);
         sb.append(contactType.name());
         return sb.toString();
+    }
+
+    public String toStringWithoutType() {
+        String separator = ",";
+        StringBuilder sb = new StringBuilder();
+        sb.append(nbSms);
+        sb.append(separator);
+        sb.append(nbCalls);
+        sb.append(separator);
+        sb.append(cumulativeCallDuration);
+        sb.append(separator);
+        sb.append(averageCallDuration);
+        sb.append(separator);
+        sb.append(isWeekDay ? 1 : 0);
+        sb.append(separator);
+        sb.append(timeInDay.ordinal());
+        return sb.toString();
+    }
+
+    public JSONArray toJSONArrayWithoutType() {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            jsonArray.put(nbSms);
+            jsonArray.put(nbCalls);
+            jsonArray.put(cumulativeCallDuration);
+            jsonArray.put(averageCallDuration);
+            jsonArray.put(isWeekDay ? 1 : 0);
+            jsonArray.put(timeInDay.ordinal());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
     }
 }

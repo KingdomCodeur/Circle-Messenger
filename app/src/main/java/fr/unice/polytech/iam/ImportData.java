@@ -4,8 +4,12 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -14,15 +18,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import fr.unice.polytech.iam.utils.Macumba;
+
 /**
- * Created by colombet on 04/01/17.
+ * Created by XMG-Fire on 22/01/2017.
  */
 
-public class SendDataToServer extends AsyncTask<String, Void, String> {
+public class ImportData extends AsyncTask<String, Void, String> {
     @Override
-    protected String doInBackground(String... strings) {
+    protected String doInBackground(String... params) {
         try {
-            URL url =  new URL("http://colombet-aoechat.rhcloud.com/recupData.php");
+            URL url =  new URL("http://colombet-aoechat.rhcloud.com/preferences/import.php?id=" + params[0]);
             //URL url =  new URL("http://10.188.6.183/CircleMessenger/recupData.php"); //POUR DEBUG EN LOCAL
             Log.w("DEBUG URL : ",url.toString());
 
@@ -30,24 +36,17 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
 
             connection.setReadTimeout(10000);
             connection.setConnectTimeout(15000);
-            connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);
-
-            /*On cree les variables POST*/
-            ContentValues values = new ContentValues();
-            values.put("data",strings[0]);
-            values.put("id",strings[1]);
-
-            OutputStream os = connection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
-
-            writer.write(getQuery(values)); //On ecrit les variable POST
-            writer.flush();
-            writer.close();
-            os.close();
-            connection.getInputStream();
-            return "OK";
+            InputStream fis = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            reader.close();
+            return out.toString();
 
         } catch (MalformedURLException e) {
             Log.w("EROOOOOOOR","EROOOOOOR");
