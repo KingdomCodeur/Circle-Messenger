@@ -57,7 +57,7 @@ public class ExportData extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
         Log.w("Send", "OK");
-        return "";
+        return "OK";
     }
 
     /*Methode qui prend une liste de variable POST et creer la query correspondante ....*/

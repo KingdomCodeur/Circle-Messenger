@@ -55,7 +55,7 @@ public class ImportData extends AsyncTask<String, Void, String> {
             Log.w("EROOOOOOOR","EROOOOOOR");
             e.printStackTrace();
         }
-        return "";
+        return "OK";
     }
 
     /*Methode qui prend une liste de variable POST et creer la query correspondante ....*/

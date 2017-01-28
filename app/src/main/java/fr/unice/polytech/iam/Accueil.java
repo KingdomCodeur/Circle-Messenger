@@ -35,6 +35,7 @@ public class Accueil extends AppCompatActivity {
 
     private List<Contact> listContacts;
     private ListView lvContacts;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +78,11 @@ public class Accueil extends AppCompatActivity {
                                 ExportData exportData = new ExportData();
                                 ret = exportData.execute(contactsJson, idUnique).get();
                                 if ("OK".equals(ret)) {
-                                    Toast.makeText(getApplicationContext(), "Export data OK", Toast.LENGTH_SHORT);
+                                    Log.w("EQUALS","OK");
+                                    //Toast.makeText(getApplicationContext(), "Export data OK", Toast.LENGTH_LONG);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Export data FAILED", Toast.LENGTH_SHORT);
+                                    Log.w("EQUALS","KO");
+                                    //Toast.makeText(getApplicationContext(), "Export data FAILED", Toast.LENGTH_LONG);
                                 }
 
                                 String data = "";
@@ -96,9 +99,9 @@ public class Accueil extends AppCompatActivity {
                                 ret = query.execute(data, idUnique).get();
 
                                 if ("OK".equals(ret)) {
-                                    Toast.makeText(getApplicationContext(), "Send data to server OK", Toast.LENGTH_SHORT);
+                                    Toast.makeText(getApplicationContext(), "Send data to server OK", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Send data to server FAILED", Toast.LENGTH_SHORT);
+                                    Toast.makeText(getApplicationContext(), "Send data to server FAILED", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -121,6 +124,8 @@ public class Accueil extends AppCompatActivity {
                                 Macumba.setContactTypeFromJSONArray(listContacts, new JSONArray(ret));
                                 String json = getJSONData();
                                 Macumba.writeData(getApplicationContext(), "circle messenger", json);
+                                Toast.makeText(getApplicationContext(), "Import OK", Toast.LENGTH_SHORT).show();
+
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             } catch (ExecutionException e) {
@@ -152,4 +157,5 @@ public class Accueil extends AppCompatActivity {
 
         return jsonArray.toString();
     }
+
 }
