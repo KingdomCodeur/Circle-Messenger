@@ -114,7 +114,8 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
                     Log.w("RRRRRRRRRR", ret);
                     jsonArray = new JSONArray(ret);
                     String type = jsonArray.getJSONObject(0).getString("type");
-                    Toast.makeText(getContext(), contact.getName() + " est un(e) " + type + " !", Toast.LENGTH_LONG).show();
+                    Double confiance = jsonArray.getJSONObject(0).getDouble("confiance");
+                    Toast.makeText(getContext(), contact.getName() + " est un(e) " + type + " !" + "Avec une confiance de "+confiance+"%", Toast.LENGTH_LONG).show();
                     if (Contact.ContactType.AMI.name().toLowerCase().equals(type)) {
                         contact.setContactType(Contact.ContactType.AMI);
                         deroulante.setSelection(1);
