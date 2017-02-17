@@ -28,8 +28,8 @@ public class SendDataToServer extends AsyncTask<String, Void, String> {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            connection.setReadTimeout(10000);
-            connection.setConnectTimeout(15000);
+//            connection.setReadTimeout(10000);
+//            connection.setConnectTimeout(15000);
             connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);
