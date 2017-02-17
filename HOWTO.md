@@ -34,4 +34,4 @@ En cliquant sur le bouton "Import", l'application va appeler le serveur qui va r
 
 ## Consignes d'installation
 
-// Pour le serveur.
+Pour l'application, nous utilisons un serveur distant, http://colombet-aoechat.rhcloud.com . Si vous souhaitez utiliser un autre serveur, il vous faudra modifier le code : remplacer la valeur de la variable "ipServer" dans la classe fr.unice.polytech.iam.utils.Macumba.
