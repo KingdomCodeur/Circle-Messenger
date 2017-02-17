@@ -15,7 +15,6 @@ public class Contact implements Comparable {
     private List<ContactPhone> numbers;
     private List<Sms> sms;
     private List<PhoneCall> calls;
-    private Calendar birthday;
     private ContactType contactType = ContactType.NONE;
 
     public Contact(String contactId, String contactName) {
@@ -65,13 +64,9 @@ public class Contact implements Comparable {
         return calls;
     }
 
-    public Calendar getBirthday() { return birthday; }
-
     public ContactType getContactType() {
         return contactType;
     }
-
-    public void setBirthday(Calendar birthday) { this.birthday = birthday; }
 
     public void setContactType(ContactType type) {
         this.contactType = type;

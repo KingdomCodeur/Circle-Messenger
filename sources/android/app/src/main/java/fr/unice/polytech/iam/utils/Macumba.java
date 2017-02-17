@@ -27,6 +27,7 @@ import fr.unice.polytech.iam.contact.Sms;
 public class Macumba {
 
     public static String ipServer = "http://colombet-aoechat.rhcloud.com/";
+//    public static String ipServer = "http://colombet-aoechat.rhcloud.com/";
 
     public static List<MyVector> createVectors(Contact contact) {
         List<Communication> communicationList = new ArrayList<>();
