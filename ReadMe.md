@@ -2,6 +2,8 @@
 
 ## Manuel d'utilisation
 
+L'application Circle Messenger est disponible sur Android à partir de la version 6.0 (Marshmallow).
+
 ### Installation et lancement de l'application
 
 * Installer l'APK ;
@@ -13,7 +15,7 @@
 
 ### Utilisation de l'application
 
-Au lancement de l'application, celle-ci va charger les contacts avec numéros de téléphone, les SMS et le journal d'appel, ce qui prend un certain temps (une bonne dizaine de secondes parfois).
+Au lancement de l'application, celle-ci va charger vos contacts avec numéros de téléphone, les SMS et le journal d'appels, ce qui prend un certain temps (une bonne dizaine de secondes parfois). Elle va de même charger les données locales enregistrées lors des utilisations précédentes (les types des contacts définis).
 L'application montre vos différents contacts avec le premier numéro de téléphone enregistré, le type de contact (None par défaut, Ami, Famille ou Collègue) et deux images :
 * La triforce, permettant de demander au serveur de "typer" un contact ;
 * Une image représentant le type de contact.
@@ -27,8 +29,9 @@ Le bouton d'export permet d'envoyer au serveur les contacts sous la forme de vec
 
 #### Import
 
-Si vous avez, au préalable, exporté vos contacts, vous pouvez, même après avoir désinstallé puis réinstallé l'application, récupérer les types des contacts sur celle-ci.
-En cliquant sur le bouton "Import", l'application va appeler le serveur qui va retourner tous les contacts de votre téléphone typés et exportés au préalable, et les associer dans l'application.
+Si vous avez au préalable exporté vos contacts, vous pouvez, même après avoir désinstallé puis réinstallé l'application, récupérer les types des contacts sur celle-ci.
+En cliquant sur le bouton "Import", l'application va appeler le serveur qui va retourner tous les contacts de votre téléphone, typés et exportés au préalable, et les associer dans l'application.
 
 ## Consignes d'installation
 
+// Pour le serveur.
