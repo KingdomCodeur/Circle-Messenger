@@ -5,13 +5,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -20,15 +16,11 @@ import java.net.URLEncoder;
 
 import fr.unice.polytech.iam.utils.Macumba;
 
-/**
- * Created by XMG-Fire on 22/01/2017.
- */
-
 public class ImportData extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-            URL url =  new URL("http://colombet-aoechat.rhcloud.com/preferences/import.php?id=" + params[0]);
+            URL url =  new URL(Macumba.ipServer + "preferences/import.php?id=" + params[0]);
             //URL url =  new URL("http://10.188.6.183/CircleMessenger/recupData.php"); //POUR DEBUG EN LOCAL
             Log.w("DEBUG URL : ",url.toString());
 

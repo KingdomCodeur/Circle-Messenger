@@ -17,15 +17,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-/**
- * Created by XMG-Fire on 22/01/2017.
- */
+import fr.unice.polytech.iam.utils.Macumba;
 
 public class AskForType extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         try {
-            URL url =  new URL("http://colombet-aoechat.rhcloud.com/circle_forest.php");
+            URL url =  new URL(Macumba.ipServer + "circle_forest.php");
             //URL url =  new URL("http://10.188.6.183/CircleMessenger/recupData.php"); //POUR DEBUG EN LOCAL
             Log.w("DEBUG URL : ",url.toString());
 

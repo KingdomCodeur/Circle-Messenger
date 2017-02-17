@@ -14,15 +14,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-/**
- * Created by colombet on 04/01/17.
- */
+import fr.unice.polytech.iam.utils.Macumba;
 
 public class SendDataToServer extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         try {
-            URL url =  new URL("http://colombet-aoechat.rhcloud.com/recupData.php");
+            URL url =  new URL(Macumba.ipServer + "recupData.php");
             //URL url =  new URL("http://10.188.6.183/CircleMessenger/recupData.php"); //POUR DEBUG EN LOCAL
             Log.w("DEBUG URL : ",url.toString());
 
