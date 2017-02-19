@@ -1,7 +1,7 @@
 <?php
 	echo set_time_limit(0);
 
-	$dirData = getenv("OPENSHIFT_DATA_DIR");
+	$dirData = "/var/www/html/data/";//getenv("OPENSHIFT_DATA_DIR");
 	$files = scandir($dirData."/recup/");
 	$resultCsv = $dirData."/data/dataset/learning.csv";
 	if(file_exists($resultCsv)){
@@ -17,9 +17,9 @@
 	}
 
 
-	$dirData = getenv("OPENSHIFT_DATA_DIR");
+	$dirData = "/var/www/html/data/";//getenv("OPENSHIFT_DATA_DIR");
 
-	$cmd = "cd ".$dirData."data/;../R-3.0.2/bin/Rscript train_circle_rf.r";
+	$cmd = "cd ".$dirData."data/;Rscript train_circle_rf.r";
 
 	echo "EXEC DE : ".$cmd."<br>";
 	echo "EXEC : ".exec($cmd);

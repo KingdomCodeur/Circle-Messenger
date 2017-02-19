@@ -1,6 +1,6 @@
 <?php
 
-	$dirData = getenv("OPENSHIFT_DATA_DIR");
+	$dirData = "/var/www/html/data/";//getenv("OPENSHIFT_DATA_DIR");
 
 	if(isset($_POST["JSON"]) && isset($_POST["id"])){
 		$unique = $_POST["id"];

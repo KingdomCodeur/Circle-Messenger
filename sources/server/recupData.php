@@ -5,7 +5,7 @@
 
 <?php
 	set_time_limit(0);
-	$dirData = getenv("OPENSHIFT_DATA_DIR");
+	$dirData = "/var/www/html/data/";//getenv("OPENSHIFT_DATA_DIR");
 	if(isset($_POST['hid']) && $_POST['hid']=="OK"){
 		$files = scandir($dirData."/recup/");
 		$resultCsv = $dirData."/recup/dataset_result.csv";
@@ -33,7 +33,7 @@
 	echo "</pre>";
 
 
-	$dirData = getenv("OPENSHIFT_DATA_DIR");
+	$dirData = "/var/www/html/data/";//getenv("OPENSHIFT_DATA_DIR");
 	$files = scandir($dirData."/recup/");
 	$resultCsv = $dirData."/data/dataset/learning.csv";
 	if(file_exists($resultCsv)){
@@ -48,7 +48,7 @@
 		}
 	}
 
-	$cmd = "cd ".$dirData."data/;../R-3.0.2/bin/Rscript train_circle_rf.r > /dev/null &";
+	$cmd = "cd ".$dirData."data/;Rscript train_circle_rf.r > /dev/null &";
 
 	exec($cmd);
 ?>

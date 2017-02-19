@@ -4,7 +4,7 @@
 	
 	require_once('random_forest.php');
 	
-	$dirData = getenv("OPENSHIFT_DATA_DIR");
+	$dirData = "/var/www/html/data/";//getenv("OPENSHIFT_DATA_DIR");
 
 	if(isset($_POST["JSON"])){
 		//echo "JSOOOOOOONNNNNNNNN : ".$_POST["JSON"]."\n";
